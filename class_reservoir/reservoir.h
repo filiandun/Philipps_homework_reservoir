@@ -11,7 +11,7 @@ public:
 	~Reservoir();
 
 private:
-	short int name_length = 15;
+	short int name_length = 15; // название
 	char* name = nullptr;
 
 	long float length = 0; // длина
@@ -20,10 +20,8 @@ private:
 
 	short int type = 0; // тип 0 - бассейн, 1 - пруд, озеро, 2 - море, океан
 
-	long float volume = 0;
-	long float area = 0;
-	//long float volume = length * width * depth;
-	//long float area = length * width;
+	long float volume = 0; // объём
+	long float area = 0; // площадь
 
 public:
 	// SET
@@ -35,6 +33,10 @@ public:
 
 	void set_type(short int type);
 
+	//// CALCULATE
+	//void calculate_volume();
+	//void calculate_area();
+
 	// GET
 	void get_name() const;
 
@@ -44,12 +46,15 @@ public:
 
 	int get_type() const;
 
-	float get_volume();
-	float get_area();
-
+	float get_volume() const;
+	float get_area() const;
 
 	// 
 	bool is_type_equal(const Reservoir& r) const;
 	void area_compare(const Reservoir& r) const;
+
+	// ФАЙЛЫ
+	void save_reservoir_to_file() const; // текстовый файл
+	void save_reservoir_to_bitfile() const; // бинарный файл
 };
 

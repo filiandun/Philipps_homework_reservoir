@@ -1,11 +1,11 @@
 #include "reservoir.h"
 
-Reservoir::Reservoir()
+Reservoir::Reservoir() // конструктор по умолчанию
 {
 	this->name = new char[this->name_length];
 }
 
-Reservoir::Reservoir(char* name, short int name_length, double length, double width, double depth, short int type)
+Reservoir::Reservoir(char* name, short int name_length, double length, double width, double depth, short int type) // конструктор с параметрами
 {
 	this->name_length = name_length;
 	this->name = new char[this->name_length];
@@ -21,9 +21,12 @@ Reservoir::Reservoir(char* name, short int name_length, double length, double wi
 	this->width = width;
 	this->depth = depth;
 	this->type = type;
+
+	this->volume = this->length * this->width * this->depth; // нахождение объёма
+	this->area = this->length * this->width; // нахождение площади
 }
 
-Reservoir::Reservoir(const Reservoir& r)
+Reservoir::Reservoir(const Reservoir& r) // копирующий конструктор
 {
 	this->name_length = r.name_length;
 	this->name = new char[this->name_length];
@@ -41,13 +44,13 @@ Reservoir::Reservoir(const Reservoir& r)
 	this->area = area;
 }
 
-Reservoir::~Reservoir()
+Reservoir::~Reservoir() // деструктор
 {
 	delete[] this->name;
 }
 
 // SET
-void Reservoir::set_name(char* name, short int name_length)
+void Reservoir::set_name(char* name, short int name_length) // задание названия водоёма
 {
 	this->name_length = name_length;
 	this->name = new char[this->name_length];
@@ -57,29 +60,40 @@ void Reservoir::set_name(char* name, short int name_length)
 	}
 }
 
-void Reservoir::set_length(long float length)
+void Reservoir::set_length(long float length) // задание длины водоёма
 {
 	this->length = length;
 }
 
-void Reservoir::set_width(long float width)
+void Reservoir::set_width(long float width) // задание ширины
 {
 	this->width = width;
 }
 
-void Reservoir::set_depth(long float depth)
+void Reservoir::set_depth(long float depth) // задание глубины
 {
 	this->depth = depth;
 }
 
-void Reservoir::set_type(short int type)
+void Reservoir::set_type(short int type) // задание типа 
 {
 	this->type = type;
 }
 
+//// CALCULATE
+//void Reservoir::calculate_volume()
+//{
+//	this->volume = this->length * this->width * this->depth;
+//}
+//
+//void Reservoir::calculate_area()
+//{
+//	this->area = this->length * this->width;
+//}
+
 
 // GET
-void Reservoir::get_name() const
+void Reservoir::get_name() const // получение названия водоёма
 {
 	for (int i = 0; i < this->name_length; ++i)
 	{
@@ -87,41 +101,40 @@ void Reservoir::get_name() const
 	}
 }
 
-float Reservoir::get_length() const
+float Reservoir::get_length() const // получение длины водоёма
 {
 	return this->length;
 }
 
-float Reservoir::get_width() const
+float Reservoir::get_width() const // получение ширины
 {
 	return this->width;
 }
 
-float Reservoir::get_depth() const
+float Reservoir::get_depth() const // получение глубины
 {
 	return this->depth;
 }
 
-int Reservoir::get_type() const
+int Reservoir::get_type() const // получение типа
 {
 	return this->type;
 }
 
-float Reservoir::get_volume()
-{
-	return this->volume = length * width * depth;
 
+float Reservoir::get_volume() const // получение объёма
+{
+	return this->volume;
 }
 
-float Reservoir::get_area()
+float Reservoir::get_area() const // получение площади
 {
-	return this->area = length * width;
+	return this->area;
 }
 
 
-
-
-bool Reservoir::is_type_equal(const Reservoir& r) const
+//
+bool Reservoir::is_type_equal(const Reservoir& r) const // сравнение типов водоёмов
 {
 	if (this->type == r.type)
 	{
@@ -130,7 +143,7 @@ bool Reservoir::is_type_equal(const Reservoir& r) const
 	return 0;
 }
 
-void Reservoir::area_compare(const Reservoir& r) const
+void Reservoir::area_compare(const Reservoir& r) const // сравнение площади водоёмов
 {
 	if (this->area > r.area)
 	{
@@ -144,4 +157,50 @@ void Reservoir::area_compare(const Reservoir& r) const
 	{
 		std::cout << "Площадь водоёма "; r.get_name(); std::cout << " равна площади водоёма "; this->get_name();
 	}
+}
+
+
+// ФАЙЛЫ
+void Reservoir::save_reservoir_to_file() const // текстовый файл
+{
+	std::ofstream save_reservoir("file_with_reservoirs.txt", std::ios::out | std::ios::app); // ios::app - для добавления чего-то в конец файла (с сохранением старого)
+
+	if (save_reservoir.is_open())
+	{
+		//for (int i = 0; i < this->name_length; i++) // запись в файл названия водоёма
+		//{
+		//	save_reservoir << this->name[i];
+		//}
+		save_reservoir.write(this->name, this->name_length); // запись в файл названия водоёма (встроенная функция .write)
+		
+		save_reservoir << "\t\t" << this->get_length() << "\t\t" << this->get_width() << "\t\t" << this->get_depth() << "\t\t" << this->get_type() << "\t\t" << this->get_volume() << "\t\t" << this->get_area() << std::endl; // запись всего остального
+	}
+	else
+	{
+		std::cerr << std::endl << "ОШИБКА ПРИ ОТКРЫТИИ ФАЙЛА" << std::endl;
+	}
+
+	save_reservoir.close(); // закрытие потока
+}
+
+void Reservoir::save_reservoir_to_bitfile() const // бинарный файл
+{
+	std::ofstream save_reservoir("bitfile_with_reservoirs.doc", std::ios::binary | std::ios::app); // ios::binary - для бинарных файлов
+
+	if (save_reservoir.is_open())
+	{
+		//for (int i = 0; i < this->name_length; i++) // запись в файл названия водоёма
+		//{
+		//	save_reservoir << this->name[i];
+		//}
+		save_reservoir.write(this->name, this->name_length); // запись в файл названия водоёма (встроенная функция .write)
+
+		save_reservoir << "\t\t" << this->get_length() << "\t\t" << this->get_width() << "\t\t" << this->get_depth() << "\t\t" << this->get_type() << "\t\t" << this->get_volume() << "\t\t" << this->get_area() << std::endl; // запись всего остального
+	}
+	else
+	{
+		std::cerr << std::endl << "ОШИБКА ПРИ ОТКРЫТИИ ФАЙЛА" << std::endl;
+	}
+
+	save_reservoir.close(); // закрытие потока
 }
