@@ -5,14 +5,17 @@ Reservoir::Reservoir()
 	this->name = new char[this->name_length];
 }
 
-Reservoir::Reservoir(const char* name, short int name_length, double length, double width, double depth, short int type)
+Reservoir::Reservoir(char* name, short int name_length, double length, double width, double depth, short int type)
 {
 	this->name_length = name_length;
 	this->name = new char[this->name_length];
-	for (int i = 0; i < this->name_length; i++)
+	for (int i = 0; i < this->name_length; ++i)
 	{
 		this->name[i] = name[i];
 	}
+
+	// get_name();
+	set_name(name, name_length);
 
 	this->length = length;
 	this->width = width;
@@ -24,7 +27,7 @@ Reservoir::Reservoir(const Reservoir& r)
 {
 	this->name_length = r.name_length;
 	this->name = new char[this->name_length];
-	for (int i = 0; i < r.name_length; i++)
+	for (int i = 0; i < r.name_length; ++i)
 	{
 		this->name[i] = r.name[i];
 	}
@@ -44,10 +47,11 @@ Reservoir::~Reservoir()
 }
 
 // SET
-void Reservoir::set_name(const char* name, short int name_length)
+void Reservoir::set_name(char* name, short int name_length)
 {
 	this->name_length = name_length;
-	for (int i = 0; i < this->name_length; i++)
+	this->name = new char[this->name_length];
+	for (int i = 0; i < this->name_length; ++i)
 	{
 		this->name[i] = name[i];
 	}
@@ -77,7 +81,7 @@ void Reservoir::set_type(short int type)
 // GET
 void Reservoir::get_name() const
 {
-	for (int i = 0; i < this->name_length; i++)
+	for (int i = 0; i < this->name_length; ++i)
 	{
 		std::cout << this->name[i];
 	}
