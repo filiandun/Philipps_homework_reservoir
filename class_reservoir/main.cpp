@@ -1,6 +1,8 @@
 ﻿#include <iostream>
 #include "reservoir.h"
 
+enum reservoir_type { POOL, POND, SEA }; // тип водоёма
+
 int main()
 {
     setlocale(LC_ALL, "rus");
@@ -13,7 +15,7 @@ int main()
     long float width_1 = 30; // ширина
     long float depth_1 = 4.5; // глубина
 
-    short int type_1 = 0;
+    short int type_1 = POOL;
 
 // ПРУД
     const short int name_length_2 = 5;
@@ -23,7 +25,9 @@ int main()
     long float width_2 = 165.52; // ширина
     long float depth_2 = 60.8; // глубина
 
-    short int type_2 = 0;
+    short int type_2 = POND;
+    // short int type_2 = POOL; // это для сравнения водоёмов, которое ниже
+
 
 // МОРЕ
     const short int name_length_3 = 4;
@@ -33,7 +37,7 @@ int main()
     long float width_3 = 93453.35; // ширина
     long float depth_3 = 1545.963; // глубина
 
-    short int type_3 = 2;
+    short int type_3 = SEA;
 
 
     Reservoir* reservoir = new Reservoir[3];
@@ -43,9 +47,23 @@ int main()
     reservoir[1] = Reservoir{ name_2, name_length_2, length_2, width_2, depth_2, type_2 };
     reservoir[2] = Reservoir{ name_3, name_length_3, length_3, width_3, depth_3, type_3 };
 
+    // или я дурак, или лыжи не едут, но у меня выводится вместо имени водоёма (name_1, name_2, name_3) всякий рандомным мусор,
+    // он выводится только при вызове конструктора с параметрами (вот он чуть выше).
+    // я не знаю как это пофиксить, нашёл один, тупой вариант:
+    // если вызвать функции set_name после этого конструктора, то всё имена нормально выводятся:
+    reservoir[0].set_name(name_1, name_length_1);
+    reservoir[1].set_name(name_2, name_length_2);
+    reservoir[2].set_name(name_3, name_length_3);
+    // при этом, если я в этом конструкторе вызову функцию get_name(), то он выводит имена нормально
+
+
+// КОНСТРУКТОР КОПИРОВАНИЯ
+   // reservoir[0] = reservoir[2];
+
+
 // ВЫВОД МАССИВА
     std::cout << "Имя" << "\t\t" << "Длина" << "\t\t" << "Ширина" << "\t\t" << "Глубина" << "\t\t" << "Тип" << "\t\t" << "Объём" << "\t\t" << "Площадь" << std::endl;
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 3; ++i)
     {
         reservoir[i].get_name();
         std::cout << "\t\t" << reservoir[i].get_length() << "\t\t" << reservoir[i].get_width() << "\t\t" << reservoir[i].get_depth() << "\t\t" << reservoir[i].get_type() << "\t\t" << reservoir[i].get_volume() << "\t\t" << reservoir[i].get_area() << std::endl;
